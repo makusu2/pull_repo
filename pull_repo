@@ -1,0 +1,29 @@
+#!/bin/bash
+: ${REPO_URL?"Need to set REPO_URL"}
+: ${TARGET_DIR?"Need to set TARGET_DIR"}
+: ${REPO_NAME?"Need to set REPO_NAME"}
+: ${GIT_SSH_KEY?"Need to set GIT_SSH_KEY"}
+
+echo "Adding github.com to known hosts..."
+ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+echo "Writing provided GIT_SSH_KEY to ~/.ssh/id_rsa..."
+[ ! -f ~/.ssh/id_rsa ] && echo "$GIT_SSH_KEY" > ~/.ssh/id_rsa
+chmod 600 ~/.ssh/id_rsa
+
+cd $TARGET_DIR
+
+if [ ! "$(ls -A ./$REPO_NAME)" ]
+then
+    echo "Repo does not exist locally, cloning into new directory..."
+    git clone "$REPO_URL" "$REPO_NAME"
+fi
+
+cd $REPO_NAME
+
+while :
+do
+    echo "Pulling from master..."
+    git pull origin master
+    sleep ${SLEEP_DELAY}
+done
