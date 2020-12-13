@@ -1,29 +1,30 @@
 #!/bin/bash
-: ${REPO_URL?"Need to set REPO_URL"}
-: ${TARGET_DIR?"Need to set TARGET_DIR"}
-: ${REPO_NAME?"Need to set REPO_NAME"}
-: ${GIT_SSH_KEY?"Need to set GIT_SSH_KEY"}
+: "${REPO_URL?"Need to set REPO_URL"}"
+: "${TARGET_DIR?"Need to set TARGET_DIR"}"
+: "${REPO_NAME?"Need to set REPO_NAME"}"
 
 echo "Adding github.com to known hosts..."
 ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-echo "Writing provided GIT_SSH_KEY to ~/.ssh/id_rsa..."
-[ ! -f ~/.ssh/id_rsa ] && echo "$GIT_SSH_KEY" > ~/.ssh/id_rsa
-chmod 600 ~/.ssh/id_rsa
+if [ ! -f ~/.ssh/id_rsa ] && [ -n "$GIT_SSH_KEY" ]; then
+    echo "Writing provided GIT_SSH_KEY to ~/.ssh/id_rsa..."
+    echo "$GIT_SSH_KEY" > ~/.ssh/id_rsa
+    chmod 600 ~/.ssh/id_rsa
+fi
 
-cd $TARGET_DIR
+cd "$TARGET_DIR" || (echo >&2 "Dir $TARGET_DIR not found" && exit)
 
-if [ ! "$(ls -A ./$REPO_NAME)" ]
+if [ ! "$(ls -A "./$REPO_NAME")" ]
 then
     echo "Repo does not exist locally, cloning into new directory..."
     git clone "$REPO_URL" "$REPO_NAME"
 fi
 
-cd $REPO_NAME
+cd "$REPO_NAME" || (echo >&2 "Dir $REPO_NAME not found" && exit)
 
 while :
 do
     echo "Pulling from master..."
     git pull origin master
-    sleep ${SLEEP_DELAY}
+    sleep "${SLEEP_DELAY}"
 done
