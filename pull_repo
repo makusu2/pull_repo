@@ -6,8 +6,8 @@
 echo "Adding github.com to known hosts..."
 ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-echo "Writing provided GIT_SSH_KEY to ~/.ssh/id_rsa..."
 if [ ! -f ~/.ssh/id_rsa ] && [ -n "$GIT_SSH_KEY" ]; then
+    echo "Writing provided GIT_SSH_KEY to ~/.ssh/id_rsa..."
     echo "$GIT_SSH_KEY" > ~/.ssh/id_rsa
     chmod 600 ~/.ssh/id_rsa
 fi
