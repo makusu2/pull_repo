@@ -8,6 +8,6 @@ COPY ./pull_repo ./pull_repo
 
 RUN chmod u+x ./pull_repo
 
-ENV SLEEP_DELAY=60 REPO_NAME=. TARGET_DIR=/repo
+ENV SLEEP_DELAY=60 REPO_NAME=. TARGET_DIR=/repo GIT_BRANCH=master
 
 CMD /bin/sh ./pull_repo

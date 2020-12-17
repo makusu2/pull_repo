@@ -22,9 +22,11 @@ fi
 
 cd "$REPO_NAME" || (echo >&2 "Dir $REPO_NAME not found" && exit)
 
+git checkout "$GIT_BRANCH"
+
 while :
 do
-    echo "Pulling from master..."
-    git pull origin master
+    echo "Pulling from $GIT_BRANCH..."
+    git pull origin "$GIT_BRANCH"
     sleep "${SLEEP_DELAY}"
 done
