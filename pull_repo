@@ -28,5 +28,9 @@ while :
 do
     echo "Pulling from $GIT_BRANCH..."
     git pull origin "$GIT_BRANCH"
-    sleep "${SLEEP_DELAY}"
+
+    # Use a loop instead of `sleep "$SLEEP_DELAY` so that ctrl-c doesn't take forever
+    for _ in $(seq "$SLEEP_DELAY"); do
+        sleep 1
+    done
 done
